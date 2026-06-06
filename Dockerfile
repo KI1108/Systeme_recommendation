@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY api.py .
+COPY database.py .
+COPY model_nlp.py .
+
+EXPOSE 7860
+
+CMD ["gunicorn", "api:app", "--bind", "0.0.0.0:7860", "--workers", "1", "--timeout", "120"]
+
+
