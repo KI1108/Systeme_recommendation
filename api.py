@@ -1,6 +1,7 @@
 
 
 # api.py
+from flask_cors import CORS 
 from flask import Flask,request,jsonify,session
 import os
 from dotenv import load_dotenv
@@ -8,10 +9,12 @@ from database import (
     get_formations,get_bourses,
     get_user_par_email,get_client,get_user_par_id,
     creer_user,email_exist,sauvegarder_recommendations,modifier_user_db
+    
 )
 from model_nlp import recommender
 load_dotenv()
 app=Flask(__name__)
+CORS(app) 
 app.secret_key=os.getenv("SECRET_KEY","edureco2-secret")
 
 # Valeurs acceptées
@@ -196,7 +199,7 @@ def get_recommendations(user_id):
     # ----Etape 2: Charger toutes les donnees depuis la bd supabase---------
     formations = get_formations()
     bourses = get_bourses()
-    # ----Etape 3: Generer les recommendations via le model nlp------
+    # ----Etape 3: Generer les recommendations via le modele nlp------
     resultats=recommender(user,formations,bourses,nb=5)
     items= []
     # Pour chaque formation recommendée
@@ -229,10 +232,9 @@ def get_recommendations(user_id):
         'texte_profil': resultats['texte_profil']
     })
 
-# Démarrage du serveur
 if __name__ == '__main__':
-    print("API EduReco → http://127.0.0.1:5001")
-    app.run(debug=True, port=5001)
+    port = int(os.getenv("PORT", 7860))
+    app.run(debug=False, host='0.0.0.0', port=port)
 
 
 
