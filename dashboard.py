@@ -13,7 +13,7 @@ app = dash.Dash(
     suppress_callback_exceptions=True
 )
 app.title = "EduReco — Formations & Bourses"
-server= app.server"http://0.0.0.0:7860")
+server= app.server"http://0.0.0.0:7860"
 
 
 
