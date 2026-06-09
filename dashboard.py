@@ -13,7 +13,7 @@ app = dash.Dash(
     suppress_callback_exceptions=True
 )
 app.title = "EduReco — Formations & Bourses"
-server= app.server"http://0.0.0.0:7860"
+server= app.server
 
 
 
@@ -917,9 +917,8 @@ if __name__ == '__main__':
     print("  EduReco — Dashboard Dash")
     print("=" * 45)
     print("  Dashboard → http://127.0.0.1:5000")
-    print("  API       → http://127.0.0.1:5001")
+    print("  API       → http://0.0.0.0:7860")
     print("  ⚠️  Lancer api.py en parallèle !")
     print("  Ctrl+C pour arrêter")
     print("=" * 45)
-    app.run(debug=True, port=5000)
-
+    app.run(host="0.0.0.0", port=7860, debug=False)
