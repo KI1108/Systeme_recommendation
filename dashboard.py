@@ -1,9 +1,35 @@
+
+
+
+
+
+
+# dashboard.py
+# ============================================================
+# RÔLE : Interface utilisateur — 100% Python avec Dash
+#
+# Pages :
+#   - Accueil        → choix créer ou se connecter
+#   - Inscription    → formulaire création profil
+#   - Connexion      → connexion par email
+#   - Résultats      → formations + bourses recommandées
+#   - Modifier profil → mise à jour du profil
+#
+# ⚠️  L'API doit tourner en parallèle :
+#      python api.py  (port 5001)
+#
+# LANCER : python dashboard.py
+# ACCÈS  : http://127.0.0.1:5000
+#
+# Dépendances :
+#   pip install dash dash-bootstrap-components requests
+# ============================================================
+
 import dash
 from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import requests
 import os 
-
 # ─────────────────────────────────────────────────────────
 # INITIALISATION
 # ─────────────────────────────────────────────────────────
@@ -13,8 +39,13 @@ app = dash.Dash(
     suppress_callback_exceptions=True
 )
 app.title = "EduReco — Formations & Bourses"
-server= app.server
+server = app.server 
+# for local
+# API_URL = "http://127.0.0.1:5001" 
 
+
+# for production
+API_URL = os.getenv("API_URL", "http://127.0.0.1:5001")
 
 
 # ═════════════════════════════════════════════════════════
@@ -477,7 +508,7 @@ def page_modifier_profil(user):
                     dbc.Row([
                         dbc.Col([
                         dbc.Label("nom"),
-                        dbc.Input(id="mode-nom", value=user.get('nom', ''))
+                        dbc.Input(id="mod-nom", value=user.get('nom', ''))
                         ]),
 
                         dbc.Col([
@@ -508,7 +539,7 @@ def page_modifier_profil(user):
                             dbc.Label("Domaine"),
                             dbc.Select(
                                 id="mod-domaine",
-                                value=user.get('dmaine', ''),
+                                value=user.get('domaine', ''),
                                 options=DOMAINE_OPTIONS
                             )
 
@@ -711,7 +742,7 @@ def soumettre_inscription(n, nom, prenom, email,
                 "objectif":      objectif or "emploi",
                 "langue":        langue   or "francais",
             },
-            timeout=10
+            timeout=30
         )
         data = rep.json()
 
@@ -786,7 +817,7 @@ def soumettre_connexion(n, email):
         rep = requests.post(
             f"{API_URL}/api/users/connexion",
             json={"email": email.strip().lower()},
-            timeout=10
+            timeout=30
         )
         data = rep.json()
 
@@ -917,8 +948,9 @@ if __name__ == '__main__':
     print("  EduReco — Dashboard Dash")
     print("=" * 45)
     print("  Dashboard → http://127.0.0.1:5000")
-    print("  API       → http://0.0.0.0:7860")
+    print("  API       → http://127.0.0.1:5001")
     print("  ⚠️  Lancer api.py en parallèle !")
     print("  Ctrl+C pour arrêter")
     print("=" * 45)
-    app.run(host="0.0.0.0", port=7860, debug=False)
+    app.run(debug=True, port=5000)
+
