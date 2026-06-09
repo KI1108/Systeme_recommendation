@@ -13,10 +13,7 @@ app = dash.Dash(
     suppress_callback_exceptions=True
 )
 app.title = "EduReco — Formations & Bourses"
-server= app.server
-
-# API_URL = "http://127.0.0.1:7860"
-API_URL = os.getenv("API_URL", "http://127.0.0.1:5001")
+server= app.server"http://0.0.0.0:7860")
 
 
 
